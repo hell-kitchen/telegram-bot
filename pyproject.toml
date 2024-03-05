@@ -10,7 +10,9 @@ packages = [{include = "telegram_bot"}]
 [tool.poetry.dependencies]
 python = "^3.12"
 uplink = "^0.9.7"
-pydantic = "^2.6.3"
+pydantic = "<2.6"
+requests = "^2.31.0"
+aiogram = "^3.4.1"
 
 
 [build-system]
