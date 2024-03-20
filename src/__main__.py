@@ -8,8 +8,16 @@ from aiogram import Dispatcher
 from aiogram import types
 from aiogram.filters import Command
 from aiogram.enums import ParseMode, ChatAction
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 import config
+from api.ingredients import cli
+
+
+class Form(StatesGroup):
+    first = State()
+    q_ingredient = State()
 
 
 dp = Dispatcher()
@@ -32,9 +40,17 @@ async def handle_ingredients(message: types.Message):
 
 
 @dp.message(Command("search"))
-async def handle_search(message: types.Message):
-    await message.answer(f"Найдено ... ингредиентов с данным названием: {message.send_copy(chat_id=message.chat.id)}")
+async def handle_search(message: types.Message, state: FSMContext):
+    await state.set_state(Form.first)
+    await message.answer("Введите название ингредиента")
 
+
+@dp.message(Form.first)
+async def process_first(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await state.set_state(Form.q_ingredient)
+    ingredient = cli.get_ingredients(name=message.text)
+    await message.answer(f"Найдено {len(ingredient)} ингрединтов с данным названием: {message.text}")
 
 @dp.message()
 async def echo_message(message: types.Message):
