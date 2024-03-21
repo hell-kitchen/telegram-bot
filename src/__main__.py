@@ -48,6 +48,15 @@ async def handle_ingredients(message: types.Message, state: FSMContext):
                          reply_markup=ikb)
 
 
+@dp.message(Command("cancel"))
+async def cancel_cmd(message: types.Message, state: FSMContext):
+    current_state = state.set_state()
+    if current_state is None:
+        return
+    await message.reply('Отменено')
+    await state.clear()
+
+
 @dp.message(Command("search"))
 async def handle_search(message: types.Message, state: FSMContext):
     await state.set_state(Form.first)
@@ -64,7 +73,8 @@ async def process_first(message: types.Message, state: FSMContext):
     await state.set_state(Form.q_ingredient)
     ingredient = cli.get_ingredients(name=message.text)
     ingredient_list = [x.name for x in ingredient]
-    await message.answer(f"Найдено {len(ingredient)} ингрединтов с данным названием: {message.text}\n{'\n'.join(ingredient_list)}")
+    await message.answer(f"Найдено {len(ingredient)} ингрединтов с данным названием <{message.text}>:\n-{'\n-'.join(ingredient_list)}")
+    await state.set_state(Form.first)
 
 
 @dp.message()
