@@ -1,9 +1,8 @@
-
 import asyncio
 import logging
 import requests
 
-from aiogram import Bot
+from aiogram import Bot, F
 from aiogram import Dispatcher
 from aiogram import types
 from aiogram.filters import Command
@@ -11,6 +10,7 @@ from aiogram.enums import ChatAction
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import CallbackQuery
 
 import config
 from api.ingredients import cli
@@ -29,9 +29,9 @@ dp = Dispatcher()
 
 
 keyboard = [
-    [InlineKeyboardButton(text="<", url="https://ya.ru/"),
-     InlineKeyboardButton(text="pages", url="https://ya.ru/"),
-     InlineKeyboardButton(text=">", url="https://ya.ru/"),]
+    [InlineKeyboardButton(text="<", callback_data="previous"),
+     InlineKeyboardButton(text="0/100", callback_data="pages"),
+     InlineKeyboardButton(text=">", callback_data="next")]
 ]
 ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
 
@@ -44,8 +44,22 @@ async def handler_help(message: types.Message):
 
 @dp.message(Command("get_all"))
 async def handle_ingredients(message: types.Message, state: FSMContext):
-    await message.answer("тип список",
+    await message.answer(f"тип список",
                          reply_markup=ikb)
+
+
+@dp.callback_query(F.data == 'previous')
+async def callback_previous(callback_query: CallbackQuery):
+    await callback_query.message.edit_text("предыдущая страница",
+                                           reply_markup=ikb)
+    await callback_query.answer()
+
+
+@dp.callback_query(F.data == 'next')
+async def callback_next(callback_query: CallbackQuery):
+    await callback_query.message.edit_text("следующая страница",
+                                           reply_markup=ikb)
+    await callback_query.answer()
 
 
 @dp.message(Command("cancel"))
