@@ -28,9 +28,15 @@ dp = Dispatcher()
 # print(response.json())
 
 
+dic = {}
+a = cli.get_ingredients()
+alist = [x.name for x in a]
+split_alist = [alist[i: i+20] for i in range(0, len(alist), 20)]
+
+
 keyboard = [
     [InlineKeyboardButton(text="<", callback_data="previous"),
-     InlineKeyboardButton(text="0/100", callback_data="pages"),
+     InlineKeyboardButton(text="0/110", callback_data="pages"),
      InlineKeyboardButton(text=">", callback_data="next")]
 ]
 ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -44,21 +50,39 @@ async def handler_help(message: types.Message):
 
 @dp.message(Command("get_all"))
 async def handle_ingredients(message: types.Message, state: FSMContext):
-    await message.answer(f"тип список",
+    id_user = message.from_user.id
+    dic[id_user] = 0
+    await message.answer(f"- {'\n- '.join(split_alist[dic[id_user]])}",
                          reply_markup=ikb)
-
-
-@dp.callback_query(F.data == 'previous')
-async def callback_previous(callback_query: CallbackQuery):
-    await callback_query.message.edit_text("предыдущая страница",
-                                           reply_markup=ikb)
-    await callback_query.answer()
 
 
 @dp.callback_query(F.data == 'next')
 async def callback_next(callback_query: CallbackQuery):
-    await callback_query.message.edit_text("следующая страница",
-                                           reply_markup=ikb)
+    id_user = callback_query.from_user.id
+    if dic[id_user] == 109:
+        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[0])}",
+                                               reply_markup=ikb)
+        dic[id_user] = 0
+    else:
+        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[dic[id_user] + 1])}",
+                                               reply_markup=ikb)
+        dic[id_user] += 1
+    await callback_query.answer()
+
+
+@dp.callback_query(F.data == 'previous')
+async def callback_previous(callback_query: CallbackQuery):
+    id_user = callback_query.from_user.id
+    if dic[id_user] == 0:
+        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[109])}",
+                                               reply_markup=ikb)
+        dic[id_user] = 109
+        print(dic)
+    else:
+        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[dic[id_user]-1])}",
+                                               reply_markup=ikb)
+        dic[id_user] -= 1
+        print(dic)
     await callback_query.answer()
 
 
