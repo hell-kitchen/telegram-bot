@@ -24,7 +24,7 @@ class Form(StatesGroup):
 dp = Dispatcher()
 # BASE_URL = 'https://hellchicken.ru/api'
 
-# response = requests.get(f"{BASE_URL}/ingredients")
+# response = requests4.get(f"{BASE_URL}/ingredients")
 # print(response.json())
 
 
@@ -34,12 +34,14 @@ alist = [x.name for x in a]
 split_alist = [alist[i: i+20] for i in range(0, len(alist), 20)]
 
 
-keyboard = [
-    [InlineKeyboardButton(text="<", callback_data="previous"),
-     InlineKeyboardButton(text="0/110", callback_data="pages"),
-     InlineKeyboardButton(text=">", callback_data="next")]
-]
-ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
+async def ikb_updated(text: str):
+    keyboard = [
+        [InlineKeyboardButton(text="<", callback_data="previous"),
+         InlineKeyboardButton(text=f"{text}/109", callback_data="pages"),
+         InlineKeyboardButton(text=">", callback_data="next")]
+    ]
+    ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return ikb
 
 
 @dp.message(Command('help'))
@@ -53,7 +55,7 @@ async def handle_ingredients(message: types.Message, state: FSMContext):
     id_user = message.from_user.id
     dic[id_user] = 0
     await message.answer(f"- {'\n- '.join(split_alist[dic[id_user]])}",
-                         reply_markup=ikb)
+                         reply_markup=await ikb_updated(text=f"{dic[id_user]}"))
 
 
 @dp.callback_query(F.data == 'next')
@@ -61,11 +63,11 @@ async def callback_next(callback_query: CallbackQuery):
     id_user = callback_query.from_user.id
     if dic[id_user] == 109:
         await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[0])}",
-                                               reply_markup=ikb)
+                                               reply_markup=await ikb_updated(text=f"0"))
         dic[id_user] = 0
     else:
         await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[dic[id_user] + 1])}",
-                                               reply_markup=ikb)
+                                               reply_markup=await ikb_updated(text=f"{dic[id_user] + 1}"))
         dic[id_user] += 1
     await callback_query.answer()
 
@@ -75,12 +77,12 @@ async def callback_previous(callback_query: CallbackQuery):
     id_user = callback_query.from_user.id
     if dic[id_user] == 0:
         await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[109])}",
-                                               reply_markup=ikb)
+                                               reply_markup=await ikb_updated(text=f"109"))
         dic[id_user] = 109
         print(dic)
     else:
-        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[dic[id_user]-1])}",
-                                               reply_markup=ikb)
+        await callback_query.message.edit_text(f"- {'\n- '.join(split_alist[dic[id_user] - 1])}",
+                                               reply_markup=await ikb_updated(text=f"{dic[id_user] - 1}"))
         dic[id_user] -= 1
         print(dic)
     await callback_query.answer()
