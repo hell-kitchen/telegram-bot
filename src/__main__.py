@@ -37,7 +37,7 @@ split_alist = [alist[i: i+20] for i in range(0, len(alist), 20)]
 async def ikb_updated(text: str):
     keyboard = [
         [InlineKeyboardButton(text="<", callback_data="previous"),
-         InlineKeyboardButton(text=f"{text}/109", callback_data="pages"),
+         InlineKeyboardButton(text=f"{text}/109", callback_data="page"),
          InlineKeyboardButton(text=">", callback_data="next")]
     ]
     ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -70,6 +70,11 @@ async def callback_next(callback_query: CallbackQuery):
                                                reply_markup=await ikb_updated(text=f"{dic[id_user] + 1}"))
         dic[id_user] += 1
     await callback_query.answer()
+
+
+@dp.callback_query(F.data == 'page')
+async def callback_page(callback_query: CallbackQuery):
+    await callback_query.answer(text="Текущая страница")
 
 
 @dp.callback_query(F.data == 'previous')
