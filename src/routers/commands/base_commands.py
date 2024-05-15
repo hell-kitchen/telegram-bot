@@ -24,12 +24,13 @@ async def handler_start(message: types.Message):
 
 @router.message(Command('help'))
 async def handler_help(message: types.Message):
-    await message.reply(text=f"Вот список команд:"
-                             f"\n/start - запуск бота"
-                             f"\n/help - вызов справки"
-                             f"\n/cancel - отменить текущее действие"
-                             f"\n/search - поиск ингредиентов по названию"
-                             f"\n/get_all - вывод всех имеющихся ингредиентов"
+    await message.reply(text="Вот список команд:"
+                             "\n/start - запуск бота"
+                             "\n/help - вызов справки"
+                             "\n/cancel - отменить текущее действие"
+                             "\n/search - поиск ингредиентов по названию"
+                             "\n/get_all - вывод всех имеющихся ингредиентов"
+                             "\n/shoplist - получение ваших списков покупок"
                         )
 
 

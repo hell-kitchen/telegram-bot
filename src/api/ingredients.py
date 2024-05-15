@@ -10,4 +10,3 @@ class IngredientsClient(Consumer):
 
 
 cli = IngredientsClient(base_url="https://hellchicken.ru/")
-

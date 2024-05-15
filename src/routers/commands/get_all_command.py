@@ -3,11 +3,11 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
-from src.api.ingredients import cli
+from src.api import ingredients_client
 
 router = Router(name=__name__)
 dic = {}
-a = cli.get_ingredients()
+a = ingredients_client.get_ingredients()
 alist = [x.name for x in a]
 split_alist = [alist[i: i+20] for i in range(0, len(alist), 20)]
 
