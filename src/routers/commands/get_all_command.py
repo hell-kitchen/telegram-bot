@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQu
 
 from src.api.ingredients import cli
 
-rt = Router(name=__name__)
+router = Router(name=__name__)
 dic = {}
 a = cli.get_ingredients()
 alist = [x.name for x in a]
@@ -23,7 +23,7 @@ async def ikb_updated(text: str):
     return ikb
 
 
-@rt.message(Command("get_all"))
+@router.message(Command("get_all"))
 async def handle_ingredients(message: types.Message, state: FSMContext):
     id_user = message.from_user.id
     dic[id_user] = 0
@@ -33,7 +33,7 @@ async def handle_ingredients(message: types.Message, state: FSMContext):
     )
 
 
-@rt.callback_query(F.data == 'next')
+@router.callback_query(F.data == 'next')
 async def callback_next(callback_query: CallbackQuery):
     id_user = callback_query.from_user.id
     if dic[id_user] == 109:
@@ -51,12 +51,12 @@ async def callback_next(callback_query: CallbackQuery):
     await callback_query.answer()
 
 
-@rt.callback_query(F.data == 'page')
+@router.callback_query(F.data == 'page')
 async def callback_page(callback_query: CallbackQuery):
     await callback_query.answer(text="Текущая страница")
 
 
-@rt.callback_query(F.data == 'previous')
+@router.callback_query(F.data == 'previous')
 async def callback_previous(callback_query: CallbackQuery):
     id_user = callback_query.from_user.id
     if dic[id_user] == 0:

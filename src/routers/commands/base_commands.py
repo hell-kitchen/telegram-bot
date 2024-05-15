@@ -5,10 +5,10 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
-rt = Router(name=__name__)
+router = Router(name=__name__)
 
 
-@rt.message(Command('start'))
+@router.message(Command('start'))
 async def handler_start(message: types.Message):
     kb = [
         [KeyboardButton(text="/start")],
@@ -22,7 +22,7 @@ async def handler_start(message: types.Message):
     await message.reply(text="Добро пожаловать в HellChickenBot!")
 
 
-@rt.message(Command('help'))
+@router.message(Command('help'))
 async def handler_help(message: types.Message):
     await message.reply(text=f"Вот список команд:"
                              f"\n/start - запуск бота"
@@ -38,7 +38,7 @@ class Form(StatesGroup):
     q_ingredient = State()
 
 
-@rt.message(Command("cancel"))
+@router.message(Command("cancel"))
 async def cancel_cmd(message: types.Message, state: FSMContext):
     current_state = state.set_state()
     if current_state is None:

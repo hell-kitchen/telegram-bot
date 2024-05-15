@@ -1,9 +1,9 @@
 from aiogram import Router, types
 
-rt = Router(name=__name__)
+router = Router(name=__name__)
 
 
-@rt.message()
+@router.message()
 async def echo_message(message: types.Message):
     await message.answer(
         text='Думаю как ответить..'

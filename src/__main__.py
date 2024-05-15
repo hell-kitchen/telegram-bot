@@ -5,7 +5,7 @@ from aiogram import Bot
 from aiogram import Dispatcher
 
 import config
-from routers import rt as main_router
+from routers import router as main_router
 
 dp = Dispatcher()
 dp.include_router(main_router)

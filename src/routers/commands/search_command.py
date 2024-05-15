@@ -6,16 +6,16 @@ from aiogram.fsm.context import FSMContext
 from src.api.ingredients import cli
 from src.routers.commands.base_commands import Form
 
-rt = Router(name=__name__)
+router = Router(name=__name__)
 
 
-@rt.message(Command("search"))
+@router.message(Command("search"))
 async def handle_search(message: types.Message, state: FSMContext):
     await state.set_state(Form.first)
     await message.answer("Введите название ингредиента")
 
 
-@rt.message(Form.first)
+@router.message(Form.first)
 async def process_first(message: types.Message, state: FSMContext):
     await message.bot.send_chat_action(
         chat_id=message.chat.id,

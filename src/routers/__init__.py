@@ -1,13 +1,13 @@
 from aiogram import Router
-from .commands import rt as commands_router
-from .common import rt as common_router
+from .commands import router as commands_router
+from .common import router as common_router
 
 __all__ = (
-    "rt",
+    "router",
 )
 
-rt = Router(name=__name__)
-rt.include_routers(
+router = Router(name=__name__)
+router.include_routers(
     commands_router,
     common_router,
 )
