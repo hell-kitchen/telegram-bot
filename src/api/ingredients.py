@@ -11,8 +11,3 @@ class IngredientsClient(Consumer):
 
 cli = IngredientsClient(base_url="https://hellchicken.ru/")
 
-if __name__ == '__main__':
-    res = cli.get_ingredients(name='Абрикос')
-    # result = map(lambda x: x.name, res)
-    # names = [x.name for x in res]
-    print(res)
