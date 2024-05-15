@@ -9,9 +9,7 @@ from routers import rt as main_router
 
 dp = Dispatcher()
 dp.include_router(main_router)
-# BASE_URL = 'https://hellchicken.ru/api'
-# response = requests4.get(f"{BASE_URL}/ingredients")
-# print(response.json())
+
 
 
 async def main():
