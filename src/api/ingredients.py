@@ -1,5 +1,7 @@
 from uplink import Consumer, get, returns, Query
+
 from src.models import Ingredient
+from src.settings import settings
 
 
 class IngredientsClient(Consumer):
@@ -9,4 +11,4 @@ class IngredientsClient(Consumer):
         pass
 
 
-cli = IngredientsClient(base_url="https://hellchicken.ru/")
+cli = IngredientsClient(base_url=settings.base_url)

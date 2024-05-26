@@ -19,8 +19,8 @@ async def ikb_updated(text: str):
          InlineKeyboardButton(text=">", callback_data="next"),
          ]
     ]
-    ikb = InlineKeyboardMarkup(inline_keyboard=keyboard)
-    return ikb
+    inline_keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return inline_keyboard
 
 
 @router.message(Command("get_all"))

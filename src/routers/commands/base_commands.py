@@ -10,15 +10,15 @@ router = Router(name=__name__)
 
 @router.message(Command('start'))
 async def handler_start(message: types.Message):
-    kb = [
+    keyboard = [
         [KeyboardButton(text="/start")],
         [KeyboardButton(text="/help")],
         [KeyboardButton(text="/get_all")],
         [KeyboardButton(text="/search")],
         [KeyboardButton(text="/cancel")],
-
     ]
-    rkb = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
+
+    ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
     await message.reply(text="Добро пожаловать в HellChickenBot!")
 
 
